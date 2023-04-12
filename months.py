@@ -2,7 +2,7 @@ import random as r
 
 months = {
     'polish':
-        {1: 'Styczeń', 2: 'Luty', 3: 'Marzec', 4: 'Kwiecień', 5: 'Maj', 6: 'Czerwiec',
+        {1: 'Styczen', 2: 'Luty', 3: 'Marzec', 4: 'Kwiecień', 5: 'Maj', 6: 'Czerwiec',
          7: 'Lipiec', 8: 'Sierpień', 9: 'Wrzeszeń', 10: 'Pażdziernik', 11: 'Listopad', 12: 'Grudzień'},
     'english':
         {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 7: 'July',
@@ -19,50 +19,78 @@ months = {
 }
 
 
-while True:
-    option = int(input('Which option do you want to choose?'
-                       '\n1. Show months. '
-                       '\n2. Try to print correct month. '
-                       '\n3. Exit\n'))
+class Game:
+    def __init__(self, choice):
+        self.choice = choice
+        self.score = 0
 
-    if option == 1:
-        language = input('Which language? ').lower()
-        if language in months.keys():
-            print(months[language])
+    def choose(self):
+        while True:
+            self.score = 0
+            for _ in range(5):
+                if self.choice == 1:
+                    self.choice_1()
+                else:
+                    self.choice_2()
+            else:
+                print(f'Your score is {self.score}/5')
+                try_again = input('Do you want to try again? (y/n) ')
+                if try_again.lower() == 'n':
+                    break
+
+    def choice_1(self):
+        random_month = months[language][r.randint(1, 12)]
+        answer = int(input(f'{random_month}: '))
+        if 0 < answer < 13:
+            if random_month == months[language][answer]:
+                print(True)
+                self.score += 1
+            else:
+                print(False)
         else:
-            print('You have only 5 lists of polish, english, russian, ukrainian, italian months.')
+            print('Your answer must be int type 1-12 num. ')
 
-    elif option == 2:
-        keys_or_values = int(input('Do you want to print num by knowing name(1) or name by knowing num(2): '))
-        if keys_or_values == 1:
+    def choice_2(self):
+        random_month = r.randint(1, 12)
+        answer = input(f'{random_month}: ').lower().title()
+        if answer in months[language].values():
+            if answer == months[language][random_month]:
+                print(True)
+                self.score += 1
+            else:
+                print(False)
+        else:
+            print("There's is no such month")
+
+
+while True:
+    try:
+        option = int(input('Which option do you want to choose?'
+                           '\n1. Show months. '
+                           '\n2. Try to print correct month. '
+                           '\n3. Exit\n'))
+
+        if option == 1:
             language = input('Which language? ').lower()
-            score = 0
-            for _ in range(5):
-                if language in months:
-                    random_month = months[language][r.randint(1, 12)]
-                    answer = int(input(f'{random_month}: '))
-                    if 0 < answer < 13:
-                        if random_month == months[language][answer]:
-                            print(True)
-                            score += 1
-                        else:
-                            print(False)
-                    else:
-                        print('Your answer must be int type 1-12 num. ')
-            print(f'Your score is {score}/5')
-        elif keys_or_values == 2:
+            if language in months.keys():
+                print(months[language])
+            else:
+                print('You have only 5 available languages: polish, english, russian, ukrainian, italian.')
+
+        elif option == 2:
+            keys_or_values = int(input('Do you want to print num by knowing name(1) or name by knowing num(2): '))
             language = input('Which language? ').lower()
-            score = 0
-            for _ in range(5):
-                if language in months:
-                    random_month = r.randint(1, 12)
-                    answer = input(f'{random_month}: ').title()
-                    if answer in months[language].values():
-                        if answer == months[language][random_month]:
-                            print(True)
-                            score += 1
-                        else:
-                            print(False)
-                    else:
-                        print('This month is not exist. ')
-            print(f'Your score is {score}/5')
+            if language in months:
+                game = Game(keys_or_values)
+                game.choose()
+            else:
+                print('You have only 5 available languages: polish, english, russian, ukrainian, italian.')
+
+        elif option == 3:
+            break
+
+    except KeyboardInterrupt:
+        print('Program was stopped')
+        break
+    except ValueError:
+        print('Not correct command')
