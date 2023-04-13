@@ -20,29 +20,50 @@ months = {
 
 
 class Game:
-    def __init__(self, choice):
-        self.choice = choice
+    def __init__(self):
+        self.language = None
+        self.choice = 0
         self.score = 0
 
+    def show_languages(self):
+        language = input('Which language? ').lower()
+        if language in months.keys():
+            for num in months[language]:
+                print(f'{num}. {months[language][num]}')
+        elif language.lower() == 'all':
+            for i_language in months:
+                print(f'\n{i_language}:\t', end='')
+                for num in months[i_language]:
+                    print(f' {num}. {months[i_language][num]}', end='')
+        else:
+            print('You have only 5 available languages: polish, english, russian, ukrainian, italian.')
+
     def choose(self):
-        while True:
-            self.score = 0
-            for _ in range(5):
-                if self.choice == 1:
-                    self.choice_1()
+        self.choice = int(input('Do you want to print num by knowing name(1) or name by knowing num(2): '))
+        self.language = input('Which language? ').lower()
+        if self.language in months:
+            while True:
+                self.score = 0
+                for _ in range(5):
+                    if self.choice == 1:
+                        self.choice_1()
+                    elif self.choice == 2:
+                        self.choice_2()
+                    else:
+                        break
                 else:
-                    self.choice_2()
-            else:
-                print(f'Your score is {self.score}/5')
-                try_again = input('Do you want to try again? (y/n) ')
-                if try_again.lower() == 'n':
-                    break
+                    print(f'Your score is {self.score}/5')
+                    try_again = input('Do you want to try again? (y/n) ')
+                    if try_again.lower() == 'n':
+                        break
+        else:
+            print('You have only 5 available languages: polish, english, russian, ukrainian, italian.')
 
     def choice_1(self):
-        random_month = months[language][r.randint(1, 12)]
+        random_month = months[self.language][r.randint(1, 12)]
         answer = int(input(f'{random_month}: '))
         if 0 < answer < 13:
-            if random_month == months[language][answer]:
+            if random_month == months[self.language][answer]:
                 print(True)
                 self.score += 1
             else:
@@ -53,8 +74,8 @@ class Game:
     def choice_2(self):
         random_month = r.randint(1, 12)
         answer = input(f'{random_month}: ').lower().title()
-        if answer in months[language].values():
-            if answer == months[language][random_month]:
+        if answer in months[self.language].values():
+            if answer == months[self.language][random_month]:
                 print(True)
                 self.score += 1
             else:
@@ -65,26 +86,17 @@ class Game:
 
 while True:
     try:
-        option = int(input('Which option do you want to choose?'
+        game = Game()
+        option = int(input('\nWhich option do you want to choose?'
                            '\n1. Show months. '
                            '\n2. Try to print correct month. '
                            '\n3. Exit\n'))
 
         if option == 1:
-            language = input('Which language? ').lower()
-            if language in months.keys():
-                print(months[language])
-            else:
-                print('You have only 5 available languages: polish, english, russian, ukrainian, italian.')
+            game.show_languages()
 
         elif option == 2:
-            keys_or_values = int(input('Do you want to print num by knowing name(1) or name by knowing num(2): '))
-            language = input('Which language? ').lower()
-            if language in months:
-                game = Game(keys_or_values)
-                game.choose()
-            else:
-                print('You have only 5 available languages: polish, english, russian, ukrainian, italian.')
+            game.choose()
 
         elif option == 3:
             break
