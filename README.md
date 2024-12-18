@@ -1,2 +1,3 @@
 # learning_months
-Program that helps me learn the months in different languages, written with basic knowledge and understandable code for beginners like myself.
+
+Helps me to learn the months in the languages that I'm studying.
